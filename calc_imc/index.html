@@ -4,20 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- importar css style.css-->
+    <link rel="stylesheet" href="style.css">
+
 </head>
-<body>
+<body class="container">
+<div class="card">
     <form onsubmit="return calcular (event)">
 
-        <label>Digite seu peso:</label><br/>
-        <input type="text" name="peso" id="peso" placeholder="Exemplo 65"/><br/>
+        <label class="title">Digite seu peso:</label><br/>
+        <input class="containerInput" type="text" name="peso" id="peso" placeholder="Exemplo 65"/><br/>
         <br>
-        <label>Digite sua altura:</label><br/>
-        <input type="text" name="altura" id="altura" placeholder="Exemplo 1.74"/> <br/>
+        <label class="title" >Digite sua altura:</label><br/>
+        <input class="containerInput" type="text" name="altura" id="altura" placeholder="Exemplo 1.74"/> <br/>
         <br>
-        <input type="submit" value="calcular"/> <br>
+        <input class="buttonSearch" type="submit" value="calcular"/> <br>
     </form>
 
-    <div id="resultado"></div>
+    <div class="resultado">
+    <h4 id="resultado"></h4>
+    </div>   
+</div>
+
+  
+
+    
+        
+
 
     <script src="script.js"></script>
 </body>

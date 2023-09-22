@@ -16,7 +16,6 @@ function calcular(event){
     resultado = document.getElementById("resultado");
 
     if(imc < 18.5){
-        
         resultado.innerHTML = "Seu IMC é: " + imc.toFixed(2) + " e você está abaixo do peso.";
     }else if (imc >= 18.5 && imc <= 24.9){
         resultado.innerHTML = "Seu IMC é: " + imc.toFixed(2) + " e você está com o peso normal.";
@@ -26,6 +25,4 @@ function calcular(event){
         resultado.innerHTML = "Seu IMC é: " + imc.toFixed(2) + " e você está com obesidade grau 1.";
     }
 
-    document.getElementById("peso").value = "";
-    document.getElementById("altura").value = "";
 }
