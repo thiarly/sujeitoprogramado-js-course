@@ -1,0 +1,10 @@
+Criar um novo projeto usando Expo:
+
+npx create-expo-app meuapp
+
+
+Após criar seu projeto lembre-se de acessar a pasta do projeto criado pelo cmd e ai para rodar:
+
+> Usando expo mesmo:​
+
+npx expo start

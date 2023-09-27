@@ -1,0 +1,8 @@
+1 - Comando para criar novo projeto:
+    1.1 - npx react-native init seuApp
+
+2 - Após acessar a pasta do seu aplicativo no cmd, para rodar o aplicativo:
+    2.1 -npx react-native run-android
+
+3 - Se estiver usando um Mac:
+    3.1 -npx react-native run-ios
