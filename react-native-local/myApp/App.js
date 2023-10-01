@@ -1,35 +1,62 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
+
+
 
 function App(){
 
     let nome = 'Thiarly Cavalcante';
-    let img = 'https://sujeitoprogramador.com/steve.png';
-    let img_react = 'https://sujeitoprogramador.com/reactlogo.png';
+
 
     return(
         <View>
-            <Text style={{color: 'red', margin: 5, fontSize: 20}}>My App</Text>
-            <Text style={{color: 'blue', margin: 5, fontSize: 30}}>Meu first App</Text>
-            <Text style={{color: 'green', margin: 5, fontSize: 40}}>Meu Seconds App</Text>
+            <Text style={styless.texto1}>My App</Text>
+            <Text style={stylesss.texto2}>Meu first App</Text>
 
-            <Image
-            source={{uri: img }}
-             style={{width: 200, height: 200, margin: 5}}/>
-
-            <Image
-            source={{uri: img_react }}
-             style={{width: 200, height: 200, margin: 5}}/>
-
-             <Text style={{color: 'red', margin: 5, fontSize: 25}}>{nome}</Text>
+            <Logo largura={400} altura={500} fulano="Thiarly Cavalcante"/>
 
         </View>
     )
 }
 
-
 export default App;
 
+function Logo(props){
+    let img = 'https://sujeitoprogramador.com/steve.png';
+    return(
+
+        <View>
+        <Text style={styles.texto}>{props.fulano}</Text>
+        <Image source= {{uri: img }} style={{width: props.largura, height: props.altura, margin: 5}}/>
+        </View>
+    );
+}
+
+
+const styles = StyleSheet.create({
+    texto: {
+        fontSize: 20,
+        color: 'red',
+        textAlign: 'center',
+    },
+});
+
+const styless = StyleSheet.create({
+    texto1: {
+        fontSize: 50,
+        color: 'green',
+        textAlign: 'center',
+    },
+});
+
+
+const stylesss = StyleSheet.create({
+    texto2: {
+        fontSize: 30,
+        color: 'blue',
+        textAlign: 'center',
+    },
+});
 
 
 
