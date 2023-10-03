@@ -37,7 +37,7 @@ function App() {
   }
 
   function reiniciarBiscoito() {
-    setImg(require('./src/biscoito.png'));
+    setImg(require('./src/biscoito.png')); 
     setTextoFrase('');
   }
 
