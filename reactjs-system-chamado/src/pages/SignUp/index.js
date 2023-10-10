@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import './signup.css'
 
 import logo from '../../assets/intergard.png'
 import { Link } from 'react-router-dom'
+
+import { AuthContext } from '../../contexts/auth'
+
 
 
 export default function SignUp() {
@@ -10,10 +13,13 @@ export default function SignUp() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    function handleSubmit(e){
+    const {signUp, loadingAuth} = useContext(AuthContext)
+
+   async function handleSubmit(e){
         e.preventDefault()
-        if (name !== '' && email !== '' && password !== '')
-        alert('Cadastrado com sucesso!')
+        if (name !== '' && email !== '' && password !== ''){
+         await signUp(email, password, name)
+        }
     }
 
     return (
@@ -43,7 +49,9 @@ export default function SignUp() {
                     value={password} onChange={(e) => setPassword(e.target.value)} 
                     />
 
-                <button type='submit'>Cadastrar</button>
+                <button type='submit'>
+                    {loadingAuth ? 'Carregando...' : 'Cadastrar'}
+                </button>
             </form>
             <Link to="/">Já possuo uma conta!</Link>
 
