@@ -1,6 +1,6 @@
 import { useState, createContext, useEffect } from "react";
 import { auth, db } from "../services/firebaseConnection";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { useNavigate } from "react-router";
@@ -14,10 +14,35 @@ function AuthProvider({ children }){
 
     const navigate = useNavigate();
 
-    function signIn(email, password){
-        console.log(email)
-        console.log(password)
-        alert('Logado com sucesso!')
+async function signIn(email, password){
+        setLoadingAuth(true);
+
+        await signInWithEmailAndPassword(auth, email, password)
+        .then (async (value) => {
+            let uid = value.user.uid;
+
+            const docRef = doc(db, 'users', uid);
+            const docSnap = await getDoc(docRef);
+
+            let data = {
+                uid: uid,
+                name: docSnap.data().name,
+                avatarUrl: docSnap.data().avatarUrl,
+                email: value.user.email,
+            };
+
+            setUser(data);
+            storageUse(data);
+            setLoadingAuth(false);
+            toast.success('Bem vindo de volta!');
+            navigate('/dashboard');
+        })
+        .catch( (error) => {
+            console.log(error);
+            setLoadingAuth(false);
+            toast.error('Ops! Algo deu errado!');
+        })
+
     }
 
     // Cadastrar um novo user
