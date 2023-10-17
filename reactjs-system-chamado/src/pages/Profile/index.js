@@ -7,6 +7,13 @@ import { FiSettings, FiUpload } from "react-icons/fi";
 import avatar from "../../assets/avatar.png";
 import { AuthContext } from "../../contexts/auth";
 
+import {db, storage} from "../../services/firebaseConnection";
+import { doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+//import o toast
+import { toast } from "react-toastify";
+
 import './profile.css'
 
 export default function Profile() {
@@ -35,6 +42,64 @@ export default function Profile() {
         }
     }
 
+
+    async function handleUpload(){
+        const currentUid = user.uid;
+
+        const uploadRef = ref(storage, `images/${currentUid}/${imageAvatar.name}`);
+
+        const uploadTask = await uploadBytes(uploadRef, imageAvatar)
+        .then ((snapshot) => {
+            getDownloadURL(snapshot.ref).then( async (getDownloadURL) => {
+                let url = getDownloadURL;
+
+                const docRef = doc(db, 'users', user.uid);
+                await updateDoc(docRef, {
+                    avatarUrl: url,
+                    name: name
+                })
+                .then(() => {
+                    let data = {
+                        ...user,
+                        avatarUrl: url,
+                        name: name
+                    }
+                    setUser(data);
+                    storageUser(data);
+                    toast.success('Avatar atualizado com sucesso!');
+                })
+            })
+        } )
+        
+    }
+
+
+
+    async function handleSubmit(e){
+        e.preventDefault();
+
+        if (imageAvatar === null && name !== ''){
+            // Atualizar apenas o nome
+            const docRef = doc(db, 'users', user.uid);
+            await updateDoc(docRef, {
+                name: name
+            })
+            .then(() => {
+                let data = {
+                    ...user,
+                    name: name
+            }
+
+            setUser(data);
+            storageUser(data);
+            toast.success('Nome alterado com sucesso!');
+            })
+        }else if (name !== '' && imageAvatar !== null){
+            // Atualizar nome e avatar
+            handleUpload();
+        }
+    }
+
     return (
         <div>
             <Header />
@@ -43,7 +108,7 @@ export default function Profile() {
                     <FiSettings size={25} />
                 </Title>
                 <div className="container">
-                    <form className="form-profile">
+                    <form className="form-profile" onSubmit={handleSubmit}>
                         <label className="label-avatar">
                             <span>
                                 <FiUpload color="#FFF" size={25} />
@@ -64,7 +129,7 @@ export default function Profile() {
                         <label>Email</label>
                         <input type="text" value={email} disabled={true}/>
 
-                        <button type="submit">Salvar</button>
+                        <button type="submit" >Salvar</button>
 
                     </form>
 

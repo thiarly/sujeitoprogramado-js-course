@@ -48,7 +48,7 @@ async function signIn(email, password){
             };
 
             setUser(data);
-            storageUse(data);
+            storageUser(data);
             setLoadingAuth(false);
             toast.success('Bem vindo de volta!');
             navigate('/dashboard');
@@ -83,7 +83,7 @@ async function signIn(email, password){
                 };
 
                 setUser(data);
-                storageUse(data);
+                storageUser(data);
                 setLoadingAuth(false);
                 toast.success('Bem vindo ao sistema!');
                 navigate('/dashboard');
@@ -95,7 +95,7 @@ async function signIn(email, password){
     })
     }
 
-    function storageUse(data){
+    function storageUser(data){
         localStorage.setItem('@ticketsPRO', JSON.stringify(data));
     }
 
@@ -116,7 +116,7 @@ async function signIn(email, password){
         logout,
         loadingAuth,
         loading,
-        storageUse,
+        storageUser,
         setUser,
         }}
         >
