@@ -115,7 +115,9 @@ async function signIn(email, password){
         signUp,
         logout,
         loadingAuth,
-        loading
+        loading,
+        storageUse,
+        setUser,
         }}
         >
             {children}
