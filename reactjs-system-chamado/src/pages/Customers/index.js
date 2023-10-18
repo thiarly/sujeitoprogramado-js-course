@@ -4,6 +4,11 @@ import Title from '../../components/Title';
 
 import { FiUser } from 'react-icons/fi';
 
+import { db } from '../../services/firebaseConnection';
+import { addDoc, collection } from 'firebase/firestore';
+
+import { toast } from 'react-toastify';
+
 
 export default function Customers() {
 
@@ -15,9 +20,24 @@ export default function Customers() {
         e.preventDefault();
 
         if(nome !== '' && cnpj !== '' && endereco !== ''){
-            alert('Tudo ok!');
+            await addDoc(collection(db, 'customers'), {
+                nome: nome,
+                cnpj: cnpj,
+                endereco: endereco
+            })
+            .then( () => {
+                setNome('');
+                setCnpj('');
+                setEndereco('');
+
+                toast.info('Cliente cadastrado com sucesso!');
+            })
+            .catch( (error) => {
+                console.log(error);
+                toast.error('Erro ao cadastrar cliente!');
+            })
         }else{
-            alert('Preencha todos os campos!');
+            toast.error('Preencha todos os campos!');
         }
     }
 
@@ -35,10 +55,10 @@ export default function Customers() {
                         <input type='text' placeholder='Nome da empresa' value={nome} onChange={(e) => setNome(e.target.value)} />
 
                         <label>CNPJ</label>
-                        <input type='text' placeholder='CNPJ da empresa' value={cnpj} onChange={(e) => setNome(e.target.value)} />
+                        <input type='number' placeholder='CNPJ da empresa' value={cnpj} onChange={(e) => setCnpj(e.target.value)} />
 
                         <label>Endereço</label>
-                        <input type='text' placeholder='Endereço da empresa' value={endereco} onChange={(e) => setNome(e.target.value)}/>
+                        <input type='text' placeholder='Endereço da empresa' value={endereco} onChange={(e) => setEndereco(e.target.value)}/>
 
                         <button type='submit'>Cadastrar</button>
                     </form>
