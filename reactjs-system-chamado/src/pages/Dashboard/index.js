@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../contexts/auth"
 
 import Header from "../../components/Header";
@@ -14,6 +14,9 @@ import './dashboard.css'
 export default function Dashboard() {
     const { logout } = useContext(AuthContext);
 
+    const [chamado , setChamado] = useState([{}]);
+    const [loading, setLoading] = useState(true);
+
    async function handleLogout() {
        await logout();
     }
@@ -28,12 +31,23 @@ export default function Dashboard() {
                 </Title>
                 
                 <>           
-                    <Link to="/new" className="new">  
-                        <FiPlus color="#FFF" size={25}/>
-                        Novo Ticket
-                    </Link>
+            
+                    {chamado.length === 0 ? (
+                        <div className="container dashboard">
+                            <span>Nenhum chamado encontrado...</span>
+                            <Link to="/new" className="new">  
+                                <FiPlus color="#FFF" size={25}/>
+                                    Novo Ticket
+                            </Link>
+                        </div>
+                    ): (
+                        <>
+                            <Link to="/new" className="new">  
+                                <FiPlus color="#FFF" size={25}/>
+                                Novo Ticket
+                           </Link>
 
-                    <table>
+                        <table>
                         <thead>
                             <tr>
                                 <th scope="col">Cliente</th>    
@@ -65,27 +79,12 @@ export default function Dashboard() {
                             </tr>
 
 
-                            <tr>
-                                <td data-label="Cliente">Thiarly TC</td>
-                                <td data-label="Assunto">Vamos programar 1</td>
-                                <td data-label="Status">
-                                    <span className="badge" style={{ backgroundColor: '#999'}}>
-                                        Em progresso
-                                    </span>
-                                </td>
-                                <td data-label="Cadastrador">30/10/2023</td>
-                                <td data-label="#">
-                                    <button className="action" style={{ backgroundColor: "#3583f6"}}>
-                                        <FiSearch color='#FFF' size={17} />
-                                    </button>
-
-                                    <button className="action" style={{ backgroundColor: "#f6a935"}}>
-                                        <FiEdit2 color='#FFF' size={17} />
-                                    </button>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
+                        </>
+                    )}
+
+                    
                 </>
             </div>    
         </div>
