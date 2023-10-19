@@ -67,3 +67,9 @@
     line-height: 1.5em;
     text-align: justify;
 }
+
+.status-badge{
+    margin-left: 0.5em;
+    border-radius: 3px;
+    padding: 3px;
+}

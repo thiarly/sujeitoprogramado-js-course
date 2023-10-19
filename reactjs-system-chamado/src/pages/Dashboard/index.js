@@ -27,6 +27,9 @@ export default function Dashboard() {
     const [lastDocs, setLastDocs] = useState();
     const [loadingMore, setLoadingMore] = useState(false);
 
+    const [showPostModal, setShowPostModal] = useState(false);
+    const [detail, setDetail] = useState();
+
     // Mapeando cores de status
     const statusColors ={
         "Aberto": '#ff5232',
@@ -87,6 +90,11 @@ export default function Dashboard() {
         const q = query(listRef, orderBy('created', 'desc'), startAfter(lastDocs), limit(5));
         const querySnapshot = await getDocs(q);
         await updateState(querySnapshot);
+    }
+
+    function toggleModal(item){
+        setShowPostModal(!showPostModal);
+        setDetail(item);
     }
 
     if (loading) {
@@ -160,9 +168,9 @@ export default function Dashboard() {
                                         </td>
                                         <td data-label="Cadastrador">{item.createdFormated}</td>
                                         <td data-label="#">
-                                            <button className="action" style={{ backgroundColor: "#3583f6"}}>
+                                            <Link className="action" style={{ backgroundColor: "#3583f6"}} onClick={ () => toggleModal(item) }>
                                                 <FiSearch color='#FFF' size={17} />
-                                            </button>
+                                            </Link>
         
                                             <Link to={`/new/${item.id}`} className="action" style={{ backgroundColor: "#f6a935"}}>
                                                 <FiEdit2 color='#FFF' size={17} />
@@ -183,8 +191,13 @@ export default function Dashboard() {
                     
                 </>
             </div>
-            <Modal />
-             
+           {showPostModal && (
+             <Modal
+                conteudo={detail}
+                close={ () => setShowPostModal(!showPostModal)} 
+             />
+           )}
+
         </div>
     )
 }
