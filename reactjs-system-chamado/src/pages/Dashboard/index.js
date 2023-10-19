@@ -21,11 +21,15 @@ export default function Dashboard() {
 
     const [chamados , setChamados] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const [isEmpty, setIsEmpty] = useState(false);
+    const [lastDocs, setLastDocs] = useState();
+    const [loadingMore, setLoadingMore] = useState(false);
+
 
     useEffect(() => {
         async function loadChamados(){
-            const q = query(listRef, orderBy('created', 'desc'), limit(10));
+            const q = query(listRef, orderBy('created', 'desc'), limit(5));
 
             const querySnapshot = await getDocs(q);
             await updateState(querySnapshot);
@@ -57,10 +61,24 @@ export default function Dashboard() {
                 });
             });
 
+            const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1]; //Pega o ultimo documento da lista
+
             setChamados(chamados => [...chamados, ...lista]);
+            setLastDocs(lastDoc);
+
         }else{
             setIsEmpty(true);
         }
+
+        setLoadingMore(false);
+    }
+
+    async function handleMore(){
+        setLoadingMore(true);
+
+        const q = query(listRef, orderBy('created', 'desc'), startAfter(lastDocs), limit(5));
+        const querySnapshot = await getDocs(q);
+        await updateState(querySnapshot);
     }
 
     if (loading) {
@@ -72,7 +90,7 @@ export default function Dashboard() {
                     <Title name="Tickets">
                         <FiMessageSquare size={25} />
                     </Title>
-                    
+
                     <div className="container dashboard">
                         <span>Buscando chamados...</span>
                     </div>
@@ -126,7 +144,7 @@ export default function Dashboard() {
                                         <td data-label="Cliente">{item.cliente}</td>
                                         <td data-label="Assunto">{item.assunto}</td>
                                         <td data-label="Status">
-                                            <span className="badge" style={{ backgroundColor: '#999'}}>
+                                            <span className="badge" style={{ backgroundColor: item.status === 'Aberto' ? '#5cb85c' : '#999'}}>
                                                 {item.status}
                                             </span>
                                         </td>
@@ -146,6 +164,9 @@ export default function Dashboard() {
 
                         </tbody>
                     </table>
+
+                    {loadingMore && <h3>Buscando mais chamados...</h3>}
+                    {!loadingMore && !isEmpty && <button className="btn-more" onClick={handleMore}>Buscar Mais</button>}
                         </>
                     )}
 
