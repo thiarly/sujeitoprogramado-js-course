@@ -26,6 +26,13 @@ export default function Dashboard() {
     const [lastDocs, setLastDocs] = useState();
     const [loadingMore, setLoadingMore] = useState(false);
 
+    // Mapeando cores de status
+    const statusColors ={
+        "Aberto": '#d07684',
+        "Progresso": "#999",
+        "Atendido": "#5cb85c",
+    }
+
 
     useEffect(() => {
         async function loadChamados(){
@@ -144,9 +151,11 @@ export default function Dashboard() {
                                         <td data-label="Cliente">{item.cliente}</td>
                                         <td data-label="Assunto">{item.assunto}</td>
                                         <td data-label="Status">
-                                            <span className="badge" style={{ backgroundColor: item.status === 'Aberto' ? '#5cb85c' : '#999'}}>
-                                                {item.status}
-                                            </span>
+                                        <span className="badge" style={{ 
+                                            backgroundColor: statusColors[item.status] || statusColors['default']
+                                        }}>
+                                            {item.status}
+                                        </span>
                                         </td>
                                         <td data-label="Cadastrador">{item.createdFormated}</td>
                                         <td data-label="#">
@@ -154,9 +163,9 @@ export default function Dashboard() {
                                                 <FiSearch color='#FFF' size={17} />
                                             </button>
         
-                                            <button className="action" style={{ backgroundColor: "#f6a935"}}>
+                                            <Link to={`/new/${item.id}`} className="action" style={{ backgroundColor: "#f6a935"}}>
                                                 <FiEdit2 color='#FFF' size={17} />
-                                            </button>
+                                            </Link>
                                         </td>
                                     </tr>
                             )

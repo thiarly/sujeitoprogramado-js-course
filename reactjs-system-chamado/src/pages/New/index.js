@@ -6,16 +6,21 @@ import { FiPlusCircle} from 'react-icons/fi'
 
 import {AuthContext} from '../../contexts/auth'
 import { db } from '../../services/firebaseConnection'
-import {collection, getDocs, getDoc, doc, addDoc} from 'firebase/firestore'
+import {collection, getDocs, getDoc, doc, addDoc, updateDoc} from 'firebase/firestore'
+
+import { useParams, useNavigate } from 'react-router-dom'
 
 import './new.css';
 
 import { toast } from 'react-toastify'
+import { set } from 'date-fns'
 
 const listRef = collection(db, "customers");
 
 export default function New(){
   const { user } = useContext(AuthContext);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const [customers, setCustomers] = useState([])
   const [loadCustomer, setLoadCustomer] = useState(true);
@@ -24,6 +29,7 @@ export default function New(){
   const [complemento, setComplemento] = useState('')
   const [assunto, setAssunto] = useState('Suporte')
   const [status, setStatus] = useState('Aberto')
+  const [idCustomer, setIdCustomer] = useState(false)
 
   useEffect(() => {
     async function loadCustomers(){
@@ -47,16 +53,39 @@ export default function New(){
             }
             
             setLoadCustomer(false);
+
+            if(id){
+                loadId(lista);
+            }
+
         } catch (error) {
             console.log("ERRO AO BUSCAR OS CLIENTES", error);
             setLoadCustomer(false);
             setCustomers([{ id: '1', nomeFantasia: 'FREELA' }]);
         }
     }
-
     loadCustomers();    
-}, []);
+}, [id]);
 
+async function loadId(lista){
+    const docRef = doc(db, "chamados", id);
+    await getDoc(docRef)
+    .then ( (snapshot) => {
+      setAssunto(snapshot.data().assunto);
+      setStatus(snapshot.data().status);
+      setComplemento(snapshot.data().complemento);
+      
+      let index = lista.findIndex(item => item.id === snapshot.data().clienteId);
+      setCustomerSelected(index);
+      setIdCustomer(true);
+
+    })
+    .catch( (error) => {
+      console.log('ERRO AO BUSCAR ID', error);
+      setIdCustomer(false);
+    })
+
+}
 
 
   function handleOptionChange(e){
@@ -75,6 +104,32 @@ export default function New(){
 
 async function handleRegister(e){
     e.preventDefault();
+
+    if (idCustomer) {
+        //Atualizando chamado
+        const docRef = doc(db, "chamados", id);
+        await updateDoc(docRef, {
+            cliente: customers[customerSelected]?.nomeFantasia,
+            clienteId: customers[customerSelected]?.id,
+            assunto: assunto,
+            status: status,
+            complemento: complemento,
+            userId: user.uid
+        })
+        .then( () => {
+            toast.info('Chamado editado com sucesso!');
+            setComplemento('');
+            setCustomerSelected(0);
+            setIdCustomer(false);
+            navigate('/dashboard');
+        })
+        .catch( (error) => {
+            toast.error('Erro ao editar chamado!');
+            console.log(error);
+        })
+
+        return;
+    }
 
     //registrar chamado
     await addDoc(collection(db, 'chamados'), {
@@ -102,7 +157,7 @@ async function handleRegister(e){
       <Header/>
 
       <div className="content">
-        <Title name="Novo chamado">
+        <Title name={id ? "Editando Chamado" : "Novo Chamado"}>
           <FiPlusCircle size={25}/>
         </Title>
 
