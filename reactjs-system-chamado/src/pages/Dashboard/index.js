@@ -10,6 +10,7 @@ import { collection, getDocs, orderBy, limit, startAfter, query } from "firebase
 import { db } from "../../services/firebaseConnection";
 
 import { format } from "date-fns";
+import Modal from "../../components/Modal";
 
 
 import './dashboard.css'
@@ -28,7 +29,7 @@ export default function Dashboard() {
 
     // Mapeando cores de status
     const statusColors ={
-        "Aberto": '#d07684',
+        "Aberto": '#ff5232',
         "Progresso": "#999",
         "Atendido": "#5cb85c",
     }
@@ -181,7 +182,9 @@ export default function Dashboard() {
 
                     
                 </>
-            </div>    
+            </div>
+            <Modal />
+             
         </div>
     )
 }
